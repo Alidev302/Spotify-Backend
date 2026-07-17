@@ -1,5 +1,7 @@
 const usermodel = require('../models/auth.model');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
 async function register(req, res) {
     try {
@@ -16,14 +18,16 @@ async function register(req, res) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const newUser = usermodel.create({
+        const HashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await usermodel.create({
             username,
             email,
-            password,
+            password: HashedPassword,
             role
         });
 
-        const token = jwt.sign({
+        const token = await jwt.sign({
             id: newUser._id,
             role: newUser.role,
         }, process.env.JWT_SECRET);
@@ -37,4 +41,39 @@ async function register(req, res) {
     }
 }
 
-module.exports = { register };
+async function login(req, res) {
+    try {
+        const { username, email, password } = req.body;
+
+        const verifyuser = await usermodel.findOne({
+            $or: [
+                { email: email },
+                { username: username }
+            ]
+        });
+
+        if (!verifyuser) {
+            return res.status(400).json({ message: 'User not found' });
+        }
+
+        const isMatch = await bcrypt.compare(password, verifyuser.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid Password' });
+        }
+
+        const token = await jwt.sign({
+            id: verifyuser._id,
+            role: verifyuser.role,
+        }, process.env.JWT_SECRET);
+
+        res.cookie('token', token);
+
+        res.status(200).json({ message: 'Login successful', username: verifyuser.username, email: verifyuser.email, role: verifyuser.role });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Error logging in', error: error.message });
+    }
+}
+
+module.exports = { register, login };
