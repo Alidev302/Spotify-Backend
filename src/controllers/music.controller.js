@@ -28,4 +28,13 @@ async function createAlbum(req, res) {
     res.status(201).json({ message: "Album Created", album: newAlbum });
 }
 
-module.exports = { createMusic, createAlbum };
+async function getAllMusics(req, res) {
+    try {
+        const musics = await Musicmodel.find().populate('artist', " username email");
+        res.status(200).json({ message: "All Musics", musics: musics });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching musics", error: error });
+    }
+}
+
+module.exports = { createMusic, createAlbum, getAllMusics };

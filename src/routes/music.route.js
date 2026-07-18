@@ -7,7 +7,8 @@ const up = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
-router.post("/create-music" , authMiddleware, up.single("music"), musicController.createMusic);
-router.post("/create-album", authMiddleware, musicController.createAlbum);
+router.post("/create-music" , authMiddleware.authartistMiddleware, up.single("music"), musicController.createMusic);
+router.post("/create-album", authMiddleware.authartistMiddleware, musicController.createAlbum);
+router.get("/get-all-musics", authMiddleware.authMiddleware, musicController.getAllMusics);
 
 module.exports = router;
