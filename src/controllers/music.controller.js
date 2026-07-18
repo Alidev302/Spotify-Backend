@@ -29,18 +29,18 @@ async function createAlbum(req, res) {
 }
 
 async function getAllMusics(req, res) {
-    const musics = await Musicmodel.find().populate('artist', " username email");
+    const musics = await Musicmodel.find().limit(5).populate('artist', " username email");
     res.status(200).json({ message: "All Musics", musics: musics });
 }
 
 async function getAllAlbums(req, res) {
-    const albums = await Albummodel.find().select('title artist').populate('artist', " username email");
+    const albums = await Albummodel.find().limit(5).select('title artist').populate('artist', " username email");
     res.status(200).json({ message: "All Albums", albums: albums });
 }
 
 async function getAlbumById(req, res) {
     const albumId = req.params.id;
-    const album = await Albummodel.findById(albumId).populate('musics', 'title uri').populate('artist', 'username email');
+    const album = await Albummodel.findById(albumId).limit(5).populate('musics', 'title uri').populate('artist', 'username email');
     res.status(200).json({ message: "Album Found", album: album });
 }
 
