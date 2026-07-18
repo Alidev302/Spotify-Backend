@@ -7,11 +7,12 @@ const albumSchema = new mongoose.Schema({
     },
     musics: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Music',   
-}],
+        ref: 'musics',
+    }],
     artist: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',}
+        ref: 'users',
+    }
 });
 
 const Albummodel = mongoose.model('Albums', albumSchema);
