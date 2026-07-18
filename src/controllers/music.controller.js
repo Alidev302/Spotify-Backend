@@ -4,18 +4,18 @@ const jwt = require("jsonwebtoken");
 const upload = require("../services/storage.service");
 
 async function createMusic(req, res) {
-        const title = req.body.title;
-        const file = req.file;
+    const title = req.body.title;
+    const file = req.file;
 
-        const result = await upload(file);
+    const result = await upload(file);
 
-        const newMusic = await Musicmodel.create({
-            uri: result.url,
-            title: title,
-            artist: req.user.id
-        });
-        res.status(201).json({ message: "Music Created", music: newMusic });
-    }
+    const newMusic = await Musicmodel.create({
+        uri: result.url,
+        title: title,
+        artist: req.user.id
+    });
+    res.status(201).json({ message: "Music Created", music: newMusic });
+}
 
 async function createAlbum(req, res) {
     const title = req.body.title;
@@ -29,12 +29,13 @@ async function createAlbum(req, res) {
 }
 
 async function getAllMusics(req, res) {
-    try {
-        const musics = await Musicmodel.find().populate('artist', " username email");
-        res.status(200).json({ message: "All Musics", musics: musics });
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching musics", error: error });
-    }
+    const musics = await Musicmodel.find().populate('artist', " username email");
+    res.status(200).json({ message: "All Musics", musics: musics });
 }
 
-module.exports = { createMusic, createAlbum, getAllMusics };
+async function getAllAlbums(req, res) {
+    const albums = await Albummodel.find().select('title artist').populate('artist', " username email");
+    res.status(200).json({ message: "All Albums", albums: albums });
+}
+
+module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums };

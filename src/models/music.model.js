@@ -16,6 +16,6 @@ const musicSchema = new mongoose.Schema({
     }
 });
 
-const Musicmodel = mongoose.model('music', musicSchema);
+const Musicmodel = mongoose.model('musics', musicSchema);
 
 module.exports = Musicmodel;
