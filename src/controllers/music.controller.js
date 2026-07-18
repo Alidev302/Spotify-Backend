@@ -38,4 +38,10 @@ async function getAllAlbums(req, res) {
     res.status(200).json({ message: "All Albums", albums: albums });
 }
 
-module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums };
+async function getAlbumById(req, res) {
+    const albumId = req.params.id;
+    const album = await Albummodel.findById(albumId).populate('musics', 'title uri').populate('artist', 'username email');
+    res.status(200).json({ message: "Album Found", album: album });
+}
+
+module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums, getAlbumById };

@@ -20,7 +20,7 @@ const authartistMiddleware = (req, res, next) => {
     }
 };
 
-const authMiddleware = (req, res, next) => {
+const authuserMiddleware = (req, res, next) => {
     const token = req.cookies.token;
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -30,6 +30,9 @@ const authMiddleware = (req, res, next) => {
         if (!decode) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
+        if (decode.role !== "user") {
+            return res.status(403).json({ message: 'you are not a user' });
+        }
         req.user = decode;
         next();
     } catch (error) {
@@ -37,4 +40,4 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-module.exports = { authartistMiddleware, authMiddleware };
+module.exports = { authartistMiddleware, authuserMiddleware };
