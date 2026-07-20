@@ -1,7 +1,8 @@
 const imagekit = require("@imagekit/nodejs");
+const config = require("../config/config");
 
 const imagekitInstance = new imagekit({
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    privateKey: config.IMAGEKIT_PRIVATE_KEY,
 });
 
 async function uploadImage(file) {

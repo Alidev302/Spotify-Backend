@@ -27,3 +27,4 @@ const validateLogin = [
 
 module.exports = { validateRegistration, validateLogin };
 
+ 

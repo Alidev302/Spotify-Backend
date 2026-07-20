@@ -1,6 +1,6 @@
 const usermodel = require('../models/auth.model');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const config = require('../config/config');
 const bcrypt = require('bcryptjs');
 
 async function register(req, res) {
@@ -30,7 +30,7 @@ async function register(req, res) {
         const token = await jwt.sign({
             id: newUser._id,
             role: newUser.role,
-        }, process.env.JWT_SECRET);
+        }, config.JWT_SECRET);
 
         res.cookie('token', token);
 
@@ -65,7 +65,7 @@ async function login(req, res) {
         const token = await jwt.sign({
             id: verifyuser._id,
             role: verifyuser.role,
-        }, process.env.JWT_SECRET);
+        }, config.JWT_SECRET);
 
         res.cookie('token', token);
 
